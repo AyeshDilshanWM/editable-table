@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editable Table</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .editable {
+            cursor: pointer;
+        }
+        .editable:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Editable Table</h2>
+    <table class="table table-bordered" id="editableTable">
+        <thead>
+            <tr>
+                <th>Size</th>
+                <th>Matirial</th>
+                <th>Color</th>
+                <th>Stock</th>
+                <th>Active</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="editable">
+                    <select class="form-control">
+                        <option value="">Select</option>
+                        <option value="Option 1">XS</option>
+                        <option value="Option 2">SM</option>
+                        <option value="Option 3">M</option>
+                        <option value="Option 4">L</option>
+                        <option value="Option 5">XL</option>
+                        <option value="Option 6">2XL</option>
+                        <option value="Option 7">3XL</option>
+                        <option value="Option 8">Ml</option>
+                        <option value="Option 9">l</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control">
+                        <option value="">Select</option>
+                        <option value="Option 1">Cotton</option>
+                        <option value="Option 2">Silic</option>
+                        <option value="Option 3">Wool</option>
+                        <option value="Option 4">Liquid</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control">
+                        <option value="">Select</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="purple">Purple</option>
+                        <option value="orange">Orange</option>
+                        <option value="brown">Brown</option>
+                        <option value="black">Black</option>
+                        <option value="white">White</option>
+                        <option value="gray">Gray</option>
+                        <option value="silver">Silver</option>
+                    </select>
+                </td>
+                <td class="editable"></td>
+                <td class="editable">
+                    <input type="checkbox" class="form-control">
+                </td>
+                <td><button class="btn btn-danger btn-sm remove-row">Remove</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-primary" id="addRow">Add New Row</button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const table = document.getElementById('editableTable').getElementsByTagName('tbody')[0];
+        const addRowButton = document.getElementById('addRow');
+
+        // Function to make cells editable
+        function makeEditable(td) {
+            td.contentEditable = true;
+            td.classList.add('editable');
+        }
+
+        // Add event listener to existing cells
+        document.querySelectorAll('#editableTable td.editable').forEach(td => {
+            td.addEventListener('click', function() {
+                makeEditable(td);
+            });
+        });
+
+        // Function to create a select element with options
+        function createSelect(options) {
+            const select = document.createElement('select');
+            select.className = 'form-control';
+            options.forEach(optionText => {
+                const option = document.createElement('option');
+                option.value = optionText;
+                option.text = optionText;
+                select.appendChild(option);
+            });
+            return select;
+        }
+
+        // Add new row function
+        addRowButton.addEventListener('click', function() {
+            const newRow = table.insertRow();
+
+            // Second column is a select with options
+            const firstCell = newRow.insertCell();
+            const firstSelect = createSelect(['Select', 'XS', 'SM', 'M', 'L', 'XL', '2XL', '3XL', 'Ml', 'l']);
+            firstCell.appendChild(firstSelect);
+
+            // Second column is a select with options
+            const secondCell = newRow.insertCell();
+            const secondSelect = createSelect(['Select', 'Cotton', 'Silic', 'Wool', 'Liquid']);
+            secondCell.appendChild(secondSelect);
+
+            // Third column is a select with options
+            const thirdCell = newRow.insertCell();
+            const thirdSelect = createSelect(['Select', 'red', 'blue', 'green', 'yellow', 'purple', 'orange', 'brown', 'black', 'white', 'gray', 'silver']);
+            thirdCell.appendChild(thirdSelect);
+
+            // First column is editable text
+            const fourthCell = newRow.insertCell();
+            fourthCell.textContent = '';
+            makeEditable(fourthCell);
+
+            // Fifth column is a checkbox
+            const fifthCell = newRow.insertCell();
+            const fifthCheckbox = document.createElement('input');
+            fifthCheckbox.type = 'checkbox';
+            fifthCheckbox.className = 'form-control';
+            fifthCell.appendChild(fifthCheckbox);
+
+            // Fourth column is the remove button
+            const removeCell = newRow.insertCell();
+            const removeButton = document.createElement('button');
+            removeButton.className = 'btn btn-danger btn-sm remove-row';
+            removeButton.textContent = 'Remove';
+            removeCell.appendChild(removeButton);
+            
+            // Add event listener to the new remove button
+            removeButton.addEventListener('click', function() {
+                table.deleteRow(newRow.rowIndex - 1);
+            });
+        });
+
+        // Add event listeners to existing remove buttons
+        document.querySelectorAll('.remove-row').forEach(button => {
+            button.addEventListener('click', function() {
+                const row = button.closest('tr');
+                table.deleteRow(row.rowIndex - 1);
+            });
+        });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
